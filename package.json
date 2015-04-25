@@ -1,0 +1,11 @@
+{
+  "name": "aframe",
+  "version": "0.0.0",
+  "description": "Alex’s writing platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC"
+}
