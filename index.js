@@ -28,7 +28,7 @@ app.get('/process/:id', function (req, res) {
           .status(404)
           .send('No model for ' + req.params.id);
       }
-      res.send(data);
+      res.send('<pre>' + data + '</pre>');
     })
     .catch(function (err) {
       res.status(500).send(err);
