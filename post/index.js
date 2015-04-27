@@ -1,4 +1,5 @@
 import fs from 'fs';
+import fm from 'front-matter';
 
 function getFileData(filename) {
   return new Promise(function (resFile, rejFile) {
@@ -7,28 +8,38 @@ function getFileData(filename) {
         rejFile(err);
       }
 
-      resFile(data);
+      const post = fm(data);
+
+      post.id = filename.replace(/\.md$/, '');
+
+      resFile(post);
+    });
+  });
+}
+
+function filterMdFiles(filename) {
+  return filename.match(/\.md$/);
+}
+
+function findAll() {
+  return new Promise(function (res, rej) {
+    fs.readdir('./posts', function (err, files) {
+      if (err) {
+        rej(err);
+      }
+      Promise.all(files.filter(filterMdFiles).map(getFileData))
+        .then(function (posts) {
+          res(posts);
+        })
+        .catch(function (fileErr) {
+          rej(fileErr);
+        });
     });
   });
 }
 
 module.exports = {
-  findAll: function () {
-    return new Promise(function (res, rej) {
-      fs.readdir('./posts', function (err, files) {
-        if (err) {
-          rej(err);
-        }
-        Promise.all(files.map(getFileData))
-          .then(function (posts) {
-            res(posts);
-          })
-          .catch(function (fileErr) {
-            rej(fileErr);
-          });
-      });
-    });
-  },
+  findAll,
   findById: function (id) {
     return new Promise(function (resolve, reject) {
       fs.readFile('./posts/' + id + '.md', 'utf8', function (err, data) {

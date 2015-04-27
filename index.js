@@ -7,10 +7,19 @@ app.get('/', function(req, res) {
   res.send('index');
 });
 
+app.use(function (req, res, next) {
+  res.set({
+    'Cache-Control': 'public, max-age=' + (60 * 60 * 24 * 7)
+  });
+  next();
+});
+
 app.get('/process', function (req, res) {
   Post.findAll()
-    .then(function (data) {
-      res.send(data);
+    .then(function (posts) {
+      res.render('posts', {
+        posts
+      });
     })
     .catch(function (err) {
       res
@@ -28,7 +37,7 @@ app.get('/process/:id', function (req, res) {
           .status(404)
           .send('No model for ' + req.params.id);
       }
-      res.send('<pre>' + data + '</pre>');
+      res.render('post', data);
     })
     .catch(function (err) {
       res.status(500).send(err);
