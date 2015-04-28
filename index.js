@@ -1,11 +1,14 @@
 import express from 'express';
 import Post from './post';
+import compression from 'compression';
 
 const app = express();
 
 app.get('/', function(req, res) {
   res.send('index');
 });
+
+app.use(compression());
 
 app.use(function (req, res, next) {
   res.set({

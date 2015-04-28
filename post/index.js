@@ -43,11 +43,12 @@ module.exports = {
   findById: function (id) {
     return new Promise(function (resolve, reject) {
       fs.readFile('./posts/' + id + '.md', 'utf8', function (err, data) {
+        console.log(data);
         if (err) {
           return reject(err);
         }
 
-        resolve(data);
+        resolve(fm(data));
       });
     });
   }
